@@ -126,6 +126,9 @@ function sendMessage() {
                 console.error("Ошибка разбора JSON:", error);
             }
         };
+        socket.onopen = function() {
+    console.log("✅ WebSocket подключен!");
+};
 
     </script>
 </body>
