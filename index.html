@@ -87,7 +87,7 @@
 
     <script>
         let username = '';
-        const socket = new WebSocket('ws://chatsamplua.onrender.com');
+        const socket = new WebSocket('ws://localhost:8080');
 
         function registerUser() {
             const input = document.getElementById('username');
@@ -113,24 +113,24 @@
 
             socket.send(JSON.stringify({ username, message: messageText }));
         }
+        socket.onmessage = function (event) {
+            try {
+                const data = JSON.parse(event.data);
 
-socket.onmessage = function (event) {
-    try {
-        const data = JSON.parse(event.data);
-        
-        // Если сообщение не от текущего пользователя, добавляем в чат
-        if (data.username !== username) {
-            const chatBox = document.getElementById('chat-box');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'bot');
-            messageElement.textContent = `${data.username}: ${data.message}`;
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-    } catch (error) {
-        console.error("Ошибка разбора JSON:", error);
-    }
-};
+                // Если сообщение не от текущего пользователя, добавляем в чат
+                if (data.username !== username) {
+                    const chatBox = document.getElementById('chat-box');
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message', 'bot');
+                    messageElement.textContent = `${data.username}: ${data.message}`;
+                    chatBox.appendChild(messageElement);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            } catch (error) {
+                console.error("Ошибка разбора JSON:", error);
+            }
+        };
+
     </script>
 </body>
 </html>
