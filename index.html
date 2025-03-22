@@ -98,21 +98,32 @@
             document.getElementById('chat-container').style.display = 'block';
         }
 
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const messageText = input.value.trim();
-            if (messageText === '') return;
+function sendMessage() {
+    const input = document.getElementById('message-input');
+    const messageText = input.value.trim();
+    if (messageText === '') return;
 
-            const chatBox = document.getElementById('chat-box');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'user');
-            messageElement.textContent = `${username}: ${messageText}`;
-            chatBox.appendChild(messageElement);
-            input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+    // Проверяем, что WebSocket подключен
+    if (socket.readyState !== WebSocket.OPEN) {
+        console.warn("⏳ WebSocket еще не подключен. Попробуйте позже.");
+        return;
+    }
 
-            socket.send(JSON.stringify({ username, message: messageText }));
-        }
+    const chatBox = document.getElementById('chat-box');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', 'user');
+    messageElement.textContent = ${username}: ${messageText};
+    chatBox.appendChild(messageElement);
+    input.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    socket.send(JSON.stringify({ username, message: messageText }));
+}
+
+// Добавляем обработчик успешного подключения
+socket.onopen = function () {
+    console.log("✅ WebSocket подключен!");
+};
 
 socket.onmessage = function (event) {
     try {
