@@ -114,17 +114,23 @@
             socket.send(JSON.stringify({ username, message: messageText }));
         }
 
-        socket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            if (data.username && data.message) {
-                const chatBox = document.getElementById('chat-box');
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message', 'bot');
-                messageElement.textContent = `${data.username}: ${data.message}`;
-                chatBox.appendChild(messageElement);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        };
+socket.onmessage = function (event) {
+    try {
+        const data = JSON.parse(event.data);
+        
+        // Если сообщение не от текущего пользователя, добавляем в чат
+        if (data.username !== username) {
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'bot');
+            messageElement.textContent = `${data.username}: ${data.message}`;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    } catch (error) {
+        console.error("Ошибка разбора JSON:", error);
+    }
+};
     </script>
 </body>
 </html>
