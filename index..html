@@ -109,9 +109,6 @@ function sendMessage() {
         console.warn("WebSocket еще не подключен. Попробуйте позже.");
     }
 }
-socket.onopen = function() {
-    console.log("✅ WebSocket подключен!");
-};
         socket.onmessage = function (event) {
             try {
                 const data = JSON.parse(event.data);
