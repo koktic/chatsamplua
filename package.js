@@ -4,7 +4,7 @@
   "description": "WebSocket сервер для чата",
   "main": "server.js",
   "dependencies": {
-    "ws": "^8.13.0"
+    "ws": "^8.0.0"
   },
   "scripts": {
     "start": "node server.js"
