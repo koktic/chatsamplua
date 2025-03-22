@@ -6,18 +6,21 @@ const clients = new Set();
 
 server.on('connection', (ws) => {
     clients.add(ws);
+    console.log('Новый пользователь подключился');
 
     ws.on('message', (message) => {
-        // Рассылка сообщения всем клиентам
+        console.log('Получено сообщение:', message.toString());
+
         for (let client of clients) {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(message);
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(message.toString());  // Отправляем сообщение всем
             }
         }
     });
 
     ws.on('close', () => {
         clients.delete(ws);
+        console.log('Пользователь отключился');
     });
 });
 
