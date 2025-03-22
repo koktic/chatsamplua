@@ -98,36 +98,38 @@
             document.getElementById('chat-container').style.display = 'block';
         }
 
-function sendMessage() {
-    const input = document.getElementById('message-input');
-    const messageText = input.value.trim();
-    if (messageText === '') return;
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const messageText = input.value.trim();
+            if (messageText === '') return;
 
-    if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ username, message: messageText }));
-    } else {
-        console.warn("WebSocket еще не подключен. Попробуйте позже.");
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'user');
+            messageElement.textContent = `${username}: ${messageText}`;
+            chatBox.appendChild(messageElement);
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            socket.send(JSON.stringify({ username, message: messageText }));
+        }
+
+socket.onmessage = function (event) {
+    try {
+        const data = JSON.parse(event.data);
+        
+        // Если сообщение не от текущего пользователя, добавляем в чат
+        if (data.username !== username) {
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'bot');
+            messageElement.textContent = `${data.username}: ${data.message}`;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    } catch (error) {
+        console.error("Ошибка разбора JSON:", error);
     }
-}
-        socket.onmessage = function (event) {
-            try {
-                const data = JSON.parse(event.data);
-
-                // Если сообщение не от текущего пользователя, добавляем в чат
-                if (data.username !== username) {
-                    const chatBox = document.getElementById('chat-box');
-                    const messageElement = document.createElement('div');
-                    messageElement.classList.add('message', 'bot');
-                    messageElement.textContent = `${data.username}: ${data.message}`;
-                    chatBox.appendChild(messageElement);
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }
-            } catch (error) {
-                console.error("Ошибка разбора JSON:", error);
-            }
-        };
-        socket.onopen = function() {
-    console.log("✅ WebSocket подключен!");
 };
 
     </script>
