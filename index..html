@@ -98,21 +98,20 @@
             document.getElementById('chat-container').style.display = 'block';
         }
 
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const messageText = input.value.trim();
-            if (messageText === '') return;
+function sendMessage() {
+    const input = document.getElementById('message-input');
+    const messageText = input.value.trim();
+    if (messageText === '') return;
 
-            const chatBox = document.getElementById('chat-box');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'user');
-            messageElement.textContent = `${username}: ${messageText}`;
-            chatBox.appendChild(messageElement);
-            input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            socket.send(JSON.stringify({ username, message: messageText }));
-        }
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ username, message: messageText }));
+    } else {
+        console.warn("WebSocket еще не подключен. Попробуйте позже.");
+    }
+}
+socket.onopen = function() {
+    console.log("✅ WebSocket подключен!");
+};
         socket.onmessage = function (event) {
             try {
                 const data = JSON.parse(event.data);
