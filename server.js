@@ -6,22 +6,22 @@ const clients = new Set();
 
 server.on('connection', (ws) => {
     clients.add(ws);
-    console.log('Новый пользователь подключился');
+    console.log('РќРѕРІС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРґРєР»СЋС‡РёР»СЃСЏ');
 
     ws.on('message', (message) => {
-        console.log('Получено сообщение:', message.toString());
+        console.log('РџРѕР»СѓС‡РµРЅРѕ СЃРѕРѕР±С‰РµРЅРёРµ:', message.toString());
 
         for (let client of clients) {
             if (client.readyState === WebSocket.OPEN) {
-                client.send(message.toString());  // Отправляем сообщение всем
+                client.send(message.toString());  // РћС‚РїСЂР°РІР»СЏРµРј СЃРѕРѕР±С‰РµРЅРёРµ РІСЃРµРј
             }
         }
     });
 
     ws.on('close', () => {
         clients.delete(ws);
-        console.log('Пользователь отключился');
+        console.log('РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РѕС‚РєР»СЋС‡РёР»СЃСЏ');
     });
 });
 
-console.log('WebSocket сервер запущен на ws://localhost:8080');
+console.log('WebSocket СЃРµСЂРІРµСЂ Р·Р°РїСѓС‰РµРЅ РЅР° ws://localhost:8080');
